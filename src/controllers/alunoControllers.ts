@@ -1,7 +1,14 @@
 const { v4: uuidv4 } = require('uuid');
+const { Request, Response } = require('express');
+
+interface Aluno {
+    id: string;
+    nome: string;
+    password: string;
+}
 
 // Simulando banco de dados em memória
-let alunos = [
+let alunos: Aluno[] = [
     {
         id: '550e8400-e29b-41d4-a716-446655440000',
         nome: 'Example 1',
@@ -14,32 +21,33 @@ let alunos = [
     }
 ];
 
-const listarAlunos = (req, res) => {
+const listarAlunos = (req: typeof Request, res: typeof Response): void => {
     res.status(200).json(alunos);
 };
 
-const buscarAlunoPorId = (req, res) => {
+const buscarAlunoPorId = (req: typeof Request, res: typeof Response): void => {
     const { id } = req.params;
 
-    const aluno = alunos.find(u => u.id === id);
+    const aluno = alunos.find((u: Aluno) => u.id === id);
 
     if (!aluno) {
-        return res.status(404).json({
+        res.status(404).json({
             mensagem: 'Aluno não encontrado'
         });
+        return;
     }
 
     res.status(200).json(aluno);
 };
 
-const criarAluno = (req, res) => {
+const criarAluno = (req: typeof Request, res: typeof Response): void => {
     const { nome, password } = req.body;
 
-    const novoAluno = {
+    const novoAluno: Aluno = {
         id: uuidv4(),
         nome,
         password
-    }
+    };
 
     alunos.push(novoAluno);
 
@@ -49,19 +57,20 @@ const criarAluno = (req, res) => {
     });
 };
 
-const updateAluno = (req, res) => {
+const updateAluno = (req: typeof Request, res: typeof Response): void => {
     const { id } = req.params;
     const { nome, password } = req.body;
 
-    const alunoIndex = alunos.findIndex(a => a.id === id);
+    const alunoIndex = alunos.findIndex((a: Aluno) => a.id === id);
 
     if (alunoIndex === -1) {
-        return res.status(404).json({
+        res.status(404).json({
             mensagem: 'Aluno não encontrado'
         });
+        return;
     }
 
-    const alunoAtualizado = {
+    const alunoAtualizado: Aluno = {
         ...alunos[alunoIndex],
         nome,
         password
@@ -75,10 +84,17 @@ const updateAluno = (req, res) => {
     });
 };
 
-const deletarAluno = (req, res) => {
+const deletarAluno = (req: typeof Request, res: typeof Response): void => {
     const { id } = req.params;
 
-    const alunoIndex = alunos.findIndex(u => u.id == id);
+    const alunoIndex = alunos.findIndex((u: Aluno) => u.id === id);
+
+    if (alunoIndex === -1) {
+        res.status(404).json({
+            mensagem: 'Aluno não encontrado'
+        });
+        return;
+    }
 
     alunos.splice(alunoIndex, 1);
 
@@ -87,7 +103,7 @@ const deletarAluno = (req, res) => {
     });
 };
 
-module.exports = {
+export = {
     listarAlunos,
     buscarAlunoPorId,
     criarAluno,

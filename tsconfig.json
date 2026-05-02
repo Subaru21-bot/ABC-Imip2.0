@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    /* Versão do JavaScript gerado */
+    "target": "ES2020",
+
+    /* CommonJS para Node tradicional */
+    "module": "CommonJS",
+
+    /* Resolução de módulos */
+    "moduleResolution": "node",
+
+    /* Pasta origem e saída */
+    "rootDir": ".",
+    "outDir": "./dist",
+
+    /* Bibliotecas disponíveis */
+    "lib": ["ES2020"],
+
+    /* Tipos globais */
+    "types": ["node"],
+
+    /* Compatibilidade com import/export moderno */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* JSON */
+    "resolveJsonModule": true,
+
+    /* Segurança */
+    "strict": true,
+
+    /* Performance */
+    "skipLibCheck": true,
+
+    /* Consistência */
+    "forceConsistentCasingInFileNames": true,
+
+    /* Debug */
+    "sourceMap": true
+  },
+
+  "include": ["server.ts", "src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

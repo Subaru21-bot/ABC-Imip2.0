@@ -1,6 +1,14 @@
 const { v4: uuidv4 } = require('uuid');
+const { Request, Response } = require('express');
 
-let professores = [
+interface Professor {
+    id: string;
+    nome: string;
+    password: string;
+}
+
+// Simulando banco de dados em memória
+let professores: Professor[] = [
     {
         id: '550e8401-e30c-41d4-a716-446655441111',
         nome: 'Example 3',
@@ -13,31 +21,29 @@ let professores = [
     }
 ];
 
-const listarProfessores = (req, res) => {
-
+const listarProfessores = (req: typeof Request, res: typeof Response): void => {
     res.status(200).json(professores);
-}
+};
 
-const buscarProfessorPorId = (req, res) => {
-
+const buscarProfessorPorId = (req: typeof Request, res: typeof Response): void => {
     const { id } = req.params;
 
-    const professor = professores.find(p => p.id === id);
+    const professor = professores.find((p: Professor) => p.id === id);
 
     if (!professor) {
-        return res.status(404).json({
+        res.status(404).json({
             mensagem: 'Professor não encontrado'
         });
+        return;
     }
 
-    res.status(200).json(professor)
-}
+    res.status(200).json(professor);
+};
 
-const criarProfessor = (req, res) => {
-
+const criarProfessor = (req: typeof Request, res: typeof Response): void => {
     const { nome, password } = req.body;
-    
-    const novoProfessor = {
+
+    const novoProfessor: Professor = {
         id: uuidv4(),
         nome,
         password
@@ -47,23 +53,24 @@ const criarProfessor = (req, res) => {
 
     res.status(201).json({
         mensagem: 'Professor criado com sucesso',
-        aluno: novoProfessor
+        professor: novoProfessor
     });
 };
 
-const updateProfessor = (req, res) => {
-
+const updateProfessor = (req: typeof Request, res: typeof Response): void => {
     const { id } = req.params;
+    const { nome, password } = req.body;
 
-    const professorIndex = professores.findIndex(p => p.id === id);
+    const professorIndex = professores.findIndex((p: Professor) => p.id === id);
 
     if (professorIndex === -1) {
-        return res.status(404).json({
+        res.status(404).json({
             mensagem: 'Professor não encontrado'
         });
-    };
+        return;
+    }
 
-    const professorAtualizado = {
+    const professorAtualizado: Professor = {
         ...professores[professorIndex],
         nome,
         password
@@ -77,11 +84,17 @@ const updateProfessor = (req, res) => {
     });
 };
 
-const deletarProfessor = (req, res) => {
-
+const deletarProfessor = (req: typeof Request, res: typeof Response): void => {
     const { id } = req.params;
 
-    const professorIndex = professores.findIndex(p => p.id === id);
+    const professorIndex = professores.findIndex((p: Professor) => p.id === id);
+
+    if (professorIndex === -1) {
+        res.status(404).json({
+            mensagem: 'Professor não encontrado'
+        });
+        return;
+    }
 
     professores.splice(professorIndex, 1);
 
@@ -90,10 +103,10 @@ const deletarProfessor = (req, res) => {
     });
 };
 
-module.exports = {
+export = {
     listarProfessores,
     buscarProfessorPorId,
     criarProfessor,
     updateProfessor,
     deletarProfessor
-}
+};

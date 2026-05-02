@@ -1,14 +1,14 @@
 const express = require('express');
-const app = express();
+const app1 = express();
 
 const alunoRoutes = require('./routes/alunoRoutes');
 const professorRoutes = require('./routes/professorRoutes')
 
 // Middleware para JSON
-app.use(express.json());
+app1.use(express.json());
 
 // Rotas
-app.use('/aluno', alunoRoutes);
-app.use('/professor', professorRoutes);
+app1.use('/aluno', alunoRoutes);
+app1.use('/professor', professorRoutes);
 
-module.exports = app;
+module.exports = app1;

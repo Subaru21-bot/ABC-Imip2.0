@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+const expressLib2 = require('express');
+const router = expressLib2.Router();
 
 const {
     listarProfessores,
