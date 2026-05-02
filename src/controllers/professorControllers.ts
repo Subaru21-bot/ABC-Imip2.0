@@ -1,5 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { Request, Response } = require('express');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 interface Professor {
     id: string;
@@ -40,20 +42,25 @@ const buscarProfessorPorId = (req: typeof Request, res: typeof Response): void =
     res.status(200).json(professor);
 };
 
-const criarProfessor = (req: typeof Request, res: typeof Response): void => {
+const criarProfessor = async (req: typeof Request, res: typeof Response): Promise<void> => {
     const { nome, password } = req.body;
+
+    const senhaHash = await bcrypt.hash(password, SALT_ROUNDS);
 
     const novoProfessor: Professor = {
         id: uuidv4(),
         nome,
-        password
+        password: senhaHash
     };
 
     professores.push(novoProfessor);
 
     res.status(201).json({
         mensagem: 'Professor criado com sucesso',
-        professor: novoProfessor
+        professor: {
+            id: novoProfessor.id,
+            nome: novoProfessor.nome
+        }
     });
 };
 
